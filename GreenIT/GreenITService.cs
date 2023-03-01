@@ -26,7 +26,7 @@ namespace GreenIT
             Console.WriteLine("Engine started");
             while (true)
             {
-                File.AppendAllText(@"C:\ProgramData\OCS Inventory NG\Agent\GreenIT.log", GreenITPowerShell.Command(_path + @"\helloworld.ps1"));
+                File.WriteAllText(@"C:\ProgramData\OCS Inventory NG\Agent\GreenIT.log", GreenITPowerShell.Command(_path + @"\script.ps1"));
                 // Anti-CPUBreaker
                 Thread.Sleep(1000);
             }
