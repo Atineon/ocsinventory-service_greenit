@@ -1,17 +1,17 @@
 ﻿using System.ComponentModel;
-using System.Reflection;
 
 namespace GreenIT
 {
     public class GreenITService
     {
         private readonly BackgroundWorker _worker;
-        private string _path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         public GreenITService()
         {
-            _worker = new BackgroundWorker();
-            _worker.WorkerSupportsCancellation = true;
+            _worker = new BackgroundWorker
+            {
+                WorkerSupportsCancellation = true
+            };
             _worker.DoWork += Engine;
         }
 
@@ -24,11 +24,19 @@ namespace GreenIT
         public void Engine(object? sender, DoWorkEventArgs e)
         {
             Console.WriteLine("Engine started");
+            List<string> Sensors;
+            string message;
             while (true)
             {
-                File.WriteAllText(@"C:\ProgramData\OCS Inventory NG\Agent\GreenIT.log", GreenITPowerShell.Command(_path + @"\script.ps1"));
-                // Anti-CPUBreaker
-                Thread.Sleep(1000);
+                Sensors = OpenHardwareMonitorLib.GetCPUPower();
+                foreach (var sensorInfo in Sensors)
+                {
+                    message = DateTime.Now.ToString() + ": " + sensorInfo + "\r";
+                    Console.WriteLine(message);
+                    File.AppendAllText(@"C:\ProgramData\OCS Inventory NG\Agent\GreenIT.log", message);
+                }
+                Console.WriteLine("fichier actualisé");
+                Thread.Sleep(5000);
             }
         }
 

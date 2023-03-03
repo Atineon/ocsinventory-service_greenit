@@ -14,10 +14,11 @@ namespace GreenIT
                     serviceConfigurator.WhenStarted(GreenIT => GreenIT.Start());
                     serviceConfigurator.WhenStopped(GreenIT => GreenIT.Stop());
                 });
-                hostConfigurator.RunAsLocalService();
                 hostConfigurator.SetServiceName("GreenITService");
                 hostConfigurator.SetDisplayName("GreenIT Service");
                 hostConfigurator.SetDescription("Return power consumption of the machine");
+                hostConfigurator.StartAutomatically();
+                hostConfigurator.RunAsLocalSystem();
             });
             int exitCodevalue = (int)Convert.ChangeType(exitCode, exitCode.GetTypeCode());
             Environment.ExitCode = exitCodevalue;
